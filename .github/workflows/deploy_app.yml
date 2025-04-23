@@ -35,8 +35,8 @@ jobs:
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           python --version
 
-          echo "Step 1: Installing schemachange"
+          echo "Step 1: Installing snowflake-cli"
           pip install snowflake-cli
 
-          echo "Step 2: Running schemachange"
-          snow app run --account $SF_ACCOUNT --username $SF_USERNAME --role $SF_ROLE --warehouse $SF_WAREHOUSE --database $SF_DATABASE --password $SNOWFLAKE_PASSWORD
+          echo "Step 2: Running snow cli"
+          snow app run --temporary-connection true --account $SF_ACCOUNT --username $SF_USERNAME --role $SF_ROLE --warehouse $SF_WAREHOUSE --database $SF_DATABASE --password $SNOWFLAKE_PASSWORD
