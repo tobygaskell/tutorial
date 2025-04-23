@@ -17,7 +17,7 @@ session = Session.builder.getOrCreate()
 #  Create an example data frame
 data_frame = session.sql("""
                          SELECT *
-"                        FROM hello_snowflake_app.code_schema.accounts_view
+                         FROM hello_snowflake_app.code_schema.accounts_view
                          """)
 
 # Execute the query and convert it into a Pandas data frame
