@@ -39,4 +39,4 @@ jobs:
           pip install snowflake-cli
 
           echo "Step 2: Running snow cli"
-          snow app run --temporary-connection true --account $SF_ACCOUNT --username $SF_USERNAME --role $SF_ROLE --warehouse $SF_WAREHOUSE --database $SF_DATABASE --password $SNOWFLAKE_PASSWORD
+          snow app run --temporary-connection --account $SF_ACCOUNT --username $SF_USERNAME --role $SF_ROLE --warehouse $SF_WAREHOUSE --database $SF_DATABASE --password $SNOWFLAKE_PASSWORD
