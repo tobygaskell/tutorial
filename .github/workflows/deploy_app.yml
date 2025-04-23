@@ -1,0 +1,42 @@
+name: deploy-app
+
+# Controls when the action will run.
+on:
+  push:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy-snowflake-changes-job:
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+
+      - name: Run schemachange
+        env:
+          SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_ROLE: ${{ vars.SF_ROLE }}
+          SF_WAREHOUSE: ${{ vars.SF_WAREHOUSE }}
+          SF_DATABASE: ${{ vars.SF_DATABASE }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
+        run: |
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          python --version
+
+          echo "Step 1: Installing schemachange"
+          pip install snowflake-cli
+
+          echo "Step 2: Running schemachange"
+          snow app run --account $SF_ACCOUNT --username $SF_USERNAME --role $SF_ROLE --warehouse $SF_WAREHOUSE --database $SF_DATABASE --password $SNOWFLAKE_PASSWORD

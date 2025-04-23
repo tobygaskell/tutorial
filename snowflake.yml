@@ -1,0 +1,20 @@
+definition_version: 2
+entities:
+  hello_snowflake_package:
+    type: application package
+    stage: stage_content.hello_snowflake_stage
+    manifest: app/manifest.yml
+    identifier: hello_snowflake_package
+    artifacts:
+      - src: app/*
+        dest: ./
+      - python/hello_python.py
+      - streamlit/hello_snowflake.py
+    meta:
+      post_deploy:
+        - sql_script: scripts/shared_content.sql
+  hello_snowflake_app:
+    type: application
+    from:
+      target: hello_snowflake_package
+    debug: false
