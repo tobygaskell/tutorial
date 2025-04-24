@@ -1,0 +1,42 @@
+name: Deploy Python UDFs to Snowflake
+
+on:
+  push:
+    paths:
+      - "python_udfs/**"
+      - ".github/workflows/deploy_udfs.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy-udfs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Snowflake CLI
+        run: |
+          pip install snowflake-cli-labs
+
+      - name: Authenticate with Snowflake
+        run: |
+          snowflake configure --account ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+                              --username ${{ secrets.SNOWFLAKE_USERNAME }} \
+                              --password ${{ secrets.SNOWFLAKE_PASSWORD }} \
+                              --role ${{ secrets.SNOWFLAKE_ROLE }} \
+                              --database ${{ secrets.SNOWFLAKE_DATABASE }} \
+                              --warehouse ${{ secrets.SNOWFLAKE_WAREHOUSE }} \
+                              --schema ${{ secrets.SNOWFLAKE_SCHEMA }}
+
+      - name: Deploy each UDF
+        run: |
+          for dir in python_udfs/*/; do
+            echo "Deploying UDF in $dir"
+            snowflake deploy --config "$dir/snowflake.yml" --path "$dir"
+          done
